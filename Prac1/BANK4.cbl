@@ -120,20 +120,20 @@
            SET ENVIRONMENT 'COB_SCREEN_EXCEPTIONS' TO 'Y'.
 
            DISPLAY BLANK-SCREEN.
-           DISPLAY(2 26) "Cajero Automatico UnizarBank"
+           DISPLAY "Cajero Automatico UnizarBank" LINE 2 COLUMN 26
                WITH FOREGROUND-COLOR IS 1.
 
 
            MOVE FUNCTION CURRENT-DATE TO CAMPOS-FECHA.
 
-           DISPLAY(4 32) DIA.
-           DISPLAY(4 34) "-".
-           DISPLAY(4 35) MES.
-           DISPLAY(4 37) "-".
-           DISPLAY(4 38) ANO.
-           DISPLAY(4 44) HORAS.
-           DISPLAY(4 46) ":".
-           DISPLAY(4 47) MINUTOS.
+           DISPLAY DIA LINE 4 COLUMN 32.
+           DISPLAY "-" LINE 4 COLUMN 34.
+           DISPLAY MES LINE 4 COLUMN 35.
+           DISPLAY "-" LINE 4 COLUMN 37.
+           DISPLAY ANO LINE 4 COLUMN 38.
+           DISPLAY HORAS LINE 4 COLUMN 44.
+           DISPLAY ":" LINE 4 COLUMN 46.
+           DISPLAY MINUTOS LINE 4 COLUMN 47.
 
 
 
@@ -209,17 +209,17 @@
            INITIALIZE EURENT-USUARIO.
            INITIALIZE EURDEC-USUARIO.
 
-           DISPLAY(24 1) "Enter - Aceptar".
-           DISPLAY(24 66) "ESC - Cancelar".
+           DISPLAY "Enter - Aceptar" LINE 24 COLUMN 1.
+           DISPLAY "ESC - Cancelar" LINE 24 COLUMN 66.
 
-           DISPLAY(8 30) "Retirar efectivo".
-           DISPLAY(10 19) "Saldo Actual: ".
+           DISPLAY "Retirar efectivo" LINE 8 COLUMN 30.
+           DISPLAY "Saldo Actual: " LINE 10 COLUMN 19.
 
            DISPLAY SALDO-DISPLAY.
 
-           DISPLAY(11 19) "Indique la cantidad:         ".
-           DISPLAY(11 47) ".".
-           DISPLAY(11 51) "EUR".
+           DISPLAY "Indique la cantidad:         " LINE 11 COLUMN 19.
+           DISPLAY "." LINE 11 COLUMN 47.
+           DISPLAY "EUR" LINE 11 COLUMN 51.
 
            ACCEPT ENTRADA-USUARIO ON EXCEPTION
            IF ESC-PRESSED THEN
@@ -232,7 +232,7 @@
                                      + EURDEC-USUARIO.
 
            IF CENT-IMPOR-USER > CENT-SALDO-USER THEN
-               DISPLAY(15 19) "Indique una cantidad menor!!"
+               DISPLAY "Indique una cantidad menor!!" LINE 15 COLUMN 19
                    WITH BACKGROUND-COLOR RED
                GO TO PANTALLA-RETIRADA
            END-IF.
@@ -279,13 +279,13 @@
 
        FINALIZACION SECTION.
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
-           DISPLAY(8 30) "Retirar efectivo".
-           DISPLAY(10 19) "Por favor, retire los billetes".
-           DISPLAY(11 17) "El saldo resultante es de:".
+           DISPLAY "Retirar efectivo" LINE 8 COLUMN 30.
+           DISPLAY "Por favor, retire los billetes" LINE 10 COLUMN 19.
+           DISPLAY "El saldo resultante es de:" LINE 11 COLUMN 17.
 
            DISPLAY SALDO-DISPLAY-FINAL.
 
-           DISPLAY(24 33) "Enter - Aceptar".
+           DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
 
            GO TO EXIT-ENTER.
 
@@ -297,16 +297,16 @@
            CLOSE F-MOVIMIENTOS.
 
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
-           DISPLAY(9 25) "Ha ocurrido un error interno"
+           DISPLAY "Ha ocurrido un error interno" LINE 9 COLUMN 25
                WITH FOREGROUND-COLOR IS BLACK
                     BACKGROUND-COLOR IS RED.
-           DISPLAY(11 32) "Vuelva mas tarde"
+           DISPLAY "Vuelva mas tarde" LINE 11 COLUMN 32
                WITH FOREGROUND-COLOR IS BLACK
                     BACKGROUND-COLOR IS RED.
-           DISPLAY(24 33) "Enter - Aceptar".
+           DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
 
        EXIT-ENTER.
-           ACCEPT(24 80) PRESSED-KEY
+           ACCEPT PRESSED-KEY LINE 24 COLUMN 80
            IF ENTER-PRESSED
                EXIT PROGRAM
            ELSE

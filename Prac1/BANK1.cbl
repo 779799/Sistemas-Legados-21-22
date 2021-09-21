@@ -95,7 +95,8 @@
            SET ENVIRONMENT 'COB_SCREEN_ESC'        TO 'Y'
 
            DISPLAY BLANK-SCREEN.
-           DISPLAY "Cajero Automatico UnizarBank" 2 26
+
+           DISPLAY "Cajero Automatico UnizarBank" LINE 2 COLUMN 26
                WITH FOREGROUND-COLOR IS BLUE.
 
            MOVE FUNCTION CURRENT-DATE TO CAMPOS-FECHA.
@@ -113,6 +114,7 @@
        P1.
            DISPLAY "Bienvenido a UnizarBank" LINE 8 COLUMN 28.
            DISPLAY "Por favor, introduzca la tarjeta para operar" LINE 10 COLUMN 18.
+
            DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
 
        P1-ENTER.
@@ -167,7 +169,8 @@
            DISPLAY "3 - Retirar efectivo" LINE 10 COLUMN 15.
            DISPLAY "4 - Ingresar efectivo" LINE 11 COLUMN 15.
            DISPLAY "5 - Ordenar transferencia" LINE 12 COLUMN 15.
-           DISPLAY "6-Comprarentradasde espectaculos" LINE 13 COLUMN 15.
+           DISPLAY "6 - Comprar entradas de espectaculos" LINE 13
+               COLUMN 15.
            DISPLAY "7 - Cambiar clave" LINE 15 COLUMN 15.
            DISPLAY "ESC - Salir" LINE 24 COLUMN 34.
 
@@ -232,7 +235,8 @@
            CLOSE INTENTOS.
 
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
-           DISPLAY "(9 20) Se ha sobrepasado el numero de intentos"
+           DISPLAY "Se ha sobrepasado el numero de intentos" LINE 9
+               COLUMN 20
                WITH FOREGROUND-COLOR IS BLACK
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Por su seguridad se ha bloqueado la tarjeta" LINE 11 COLUMN 18
@@ -241,10 +245,10 @@
            DISPLAY "Acuda a una sucursal" LINE 12 COLUMN 30
                WITH FOREGROUND-COLOR IS BLACK
                     BACKGROUND-COLOR IS RED.
-           DISPLAY "Enter - Aceptar" LINE 24 COLUMN 32.
+           DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
 
        PINT-ERR-ENTER.
-           ACCEPT  CHOICE LINE 24 COLUMN 80 ON EXCEPTION
+           ACCEPT CHOICE LINE 24 COLUMN 80 ON EXCEPTION
            IF ENTER-PRESSED
                GO TO IMPRIMIR-CABECERA
            ELSE
@@ -273,8 +277,8 @@
                WITH FOREGROUND-COLOR IS BLACK
                     BACKGROUND-COLOR IS RED.
 
-           DISPLAY  "Enter - Aceptar" LINE 24 COLUMN 1.
-           DISPLAY  "ESC - Cancelar" LINE 24 COLUMN 65.
+           DISPLAY "Enter - Aceptar" LINE 24 COLUMN 1.
+           DISPLAY "ESC - Cancelar" LINE 24 COLUMN 65.
 
        PPIN-ERR-ENTER.
            ACCEPT CHOICE LINE 24 COLUMN 80 ON EXCEPTION
