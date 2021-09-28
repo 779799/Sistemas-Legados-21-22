@@ -292,7 +292,7 @@
 
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
 
-           OPEN INPUT F-MOVIMIENTOS.
+           OPEN I-O F-MOVIMIENTOS.
                IF FSM <> 00
                    GO TO PSYS-ERR.
 

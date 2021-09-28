@@ -8,7 +8,7 @@
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT F-MOVIMIENTOS ASSIGN TO DISK
+           SELECT OPTIONAL F-MOVIMIENTOS ASSIGN TO DISK
            ORGANIZATION IS INDEXED
            ACCESS MODE IS DYNAMIC
            RECORD KEY IS MOV-NUM
@@ -107,7 +107,7 @@
            DISPLAY MINUTOS LINE 4 COLUMN 47.
 
        PCONSULTA-SALDO.
-           OPEN INPUT F-MOVIMIENTOS.
+           OPEN I-O F-MOVIMIENTOS.
            IF FSM <> 00
                GO TO PSYS-ERR.
 
@@ -133,7 +133,7 @@
                GO TO NO-MOVIMIENTOS.
 
            MOVE LAST-MOV-NUM TO MOV-NUM.
-           OPEN INPUT F-MOVIMIENTOS.
+           OPEN I-O F-MOVIMIENTOS.
            IF FSM <> 00
                GO TO PSYS-ERR.
 
