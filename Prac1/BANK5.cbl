@@ -144,7 +144,7 @@
            INITIALIZE CENT-ACUMULADOR.
 
            OPEN I-O F-MOVIMIENTOS.
-           IF FSM <> 30
+           IF FSM <> 00
               GO TO PSYS-ERR.
 
            MOVE 0 TO LAST-MOV-NUM.
@@ -165,7 +165,7 @@
 
        CONSULTA-SALDO-USUARIO SECTION.
            OPEN INPUT F-MOVIMIENTOS.
-           IF FSM <> 30
+           IF FSM <> 00
                GO TO PSYS-ERR.
 
            MOVE 0 TO LAST-USER-MOV-NUM.
@@ -194,7 +194,7 @@
            MOVE LAST-USER-MOV-NUM TO MOV-NUM.
 
            OPEN INPUT F-MOVIMIENTOS.
-           IF FSM <> 30
+           IF FSM <> 00
                GO TO PSYS-ERR.
 
            READ F-MOVIMIENTOS INVALID KEY GO TO PSYS-ERR.
@@ -241,7 +241,7 @@
 
        INSERTAR-MOVIMIENTO SECTION.
            OPEN I-O F-MOVIMIENTOS.
-           IF FSM <> 30
+           IF FSM <> 00
               GO TO PSYS-ERR.
 
            ADD CENT-IMPOR-USER TO CENT-SALDO-USER
