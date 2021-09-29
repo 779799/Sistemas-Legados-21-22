@@ -140,7 +140,7 @@
 
        CONSULTA-ULTIMO-MOVIMIENTO SECTION.
            OPEN I-O F-MOVIMIENTOS.
-           IF FSM <> 00
+           IF FSM <> 00 AND 05
               GO TO PSYS-ERR.
 
            MOVE 0 TO LAST-MOV-NUM.

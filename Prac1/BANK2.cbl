@@ -108,7 +108,7 @@
 
        PCONSULTA-SALDO.
            OPEN I-O F-MOVIMIENTOS.
-           IF FSM <> 00
+           IF FSM <> 00 AND 05
                GO TO PSYS-ERR.
 
            MOVE 0 TO LAST-MOV-NUM.
@@ -134,7 +134,7 @@
 
            MOVE LAST-MOV-NUM TO MOV-NUM.
            OPEN I-O F-MOVIMIENTOS.
-           IF FSM <> 00
+           IF FSM <> 00 
                GO TO PSYS-ERR.
 
            READ F-MOVIMIENTOS INVALID KEY GO PSYS-ERR.

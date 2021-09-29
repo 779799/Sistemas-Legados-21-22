@@ -155,9 +155,9 @@
 
        MOVIMIENTOS-OPEN.
            OPEN I-O F-MOVIMIENTOS.
-           IF FSM <> 00 THEN
-               GO TO PSYS-ERR
-           END-IF.
+           IF FSM <> 00  AND 05
+               GO TO PSYS-ERR.
+
 
        LECTURA-MOVIMIENTOS.
            READ F-MOVIMIENTOS NEXT RECORD AT END GO TO ORDENACION-TRF.
