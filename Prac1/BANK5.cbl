@@ -72,7 +72,9 @@
        77 LAST-MOV-NUM             PIC   9(35).
 
        77 EURENT-USUARIO           PIC    9(7).
-       77 EURDEC-USUARIO           PIC    9(2).
+       77 BILL10-USUARIO           PIC    9(5).
+       77 BILL20-USUARIO           PIC    9(5).
+       77 BILL50-USUARIO           PIC    9(5).
        77 SALDO-USUARIO-ENT        PIC   S9(9).
        77 SALDO-USUARIO-DEC        PIC    9(2).
        77 CENT-SALDO-USER          PIC  S9(11).
@@ -94,9 +96,11 @@
 
        01 ENTRADA-USUARIO.
            05 FILLER BLANK ZERO AUTO UNDERLINE
-               LINE 13 COL 41 PIC 9(7) USING EURENT-USUARIO.
-           05 FILLER BLANK ZERO UNDERLINE
-               LINE 13 COL 49 PIC 9(2) USING EURDEC-USUARIO.
+               LINE 14 COL 41 PIC 9(5) USING BILL10-USUARIO.
+           05 FILLER BLANK ZERO AUTO UNDERLINE
+               LINE 15 COL 41 PIC 9(5) USING BILL20-USUARIO.
+           05 FILLER BLANK ZERO AUTO UNDERLINE
+               LINE 16 COL 41 PIC 9(5) USING BILL50-USUARIO.
 
        01 SALDO-DISPLAY.
            05 FILLER SIGN IS LEADING SEPARATE
@@ -210,31 +214,35 @@
 
 
        PANTALLA-INGRESO SECTION.
+           INITIALIZE BILL10-USUARIO.
+           INITIALIZE BILL20-USUARIO.
+           INITIALIZE BILL50-USUARIO.
            INITIALIZE EURENT-USUARIO.
-           INITIALIZE EURDEC-USUARIO.
-
-           DISPLAY "ESC - Finalizar ingreso efectivo" LINE 24 COLUMN 33.
+           DISPLAY "Enter - Aceptar" LINE 24 COLUMN 1.
+           DISPLAY "ESC - Cancelar" LINE 24 COLUMN 66.
            DISPLAY "Ingresar efectivo" LINE 8 COLUMN 30.
            DISPLAY "Saldo Actual: " LINE 10 COLUMN 19.
 
            DISPLAY SALDO-DISPLAY.
 
-           DISPLAY "Por favor,introduzca billetes" LINE 11 COLUMN 19.
-           DISPLAY "Cantidad introducida:         " LINE 13 COLUMN 19.
-           DISPLAY "." LINE 13 COLUMN 48.
-           DISPLAY "EUR" LINE 13 COLUMN 52.
-
+           DISPLAY "Por favor, introduzca billetes" LINE 11 COLUMN 19.
+           DISPLAY "Cantidad de billetes introducidas:" 
+               LINE 13 COLUMN 19.
+           DISPLAY "Billetes de 10 EUR:         " LINE 14 COLUMN 21.
+           DISPLAY "Billetes de 20 EUR:         " LINE 15 COLUMN 21.
+           DISPLAY "Billetes de 50 EUR:         " LINE 16 COLUMN 21.
        CONF2.
            ACCEPT ENTRADA-USUARIO ON EXCEPTION
-               IF ESC-PRESSED THEN
-                   GO TO PANT
-               ELSE
-                   GO TO CONF2
-               END-IF.
+           IF ESC-PRESSED THEN
+               EXIT PROGRAM
+           ELSE
+               GO TO PANT
+           END-IF.
 
-           COMPUTE CENT-IMPOR-USER = (EURENT-USUARIO * 100)
-                                     + EURDEC-USUARIO.
-           ADD CENT-IMPOR-USER TO CENT-ACUMULADOR.
+           COMPUTE CENT-IMPOR-USER = (BILL10-USUARIO * 1000) 
+               + (BILL20-USUARIO * 2000) + (BILL50-USUARIO * 5000).
+
+           
 
 
 
@@ -263,8 +271,7 @@
            MOVE MINUTOS                 TO MOV-MIN.
            MOVE SEGUNDOS                TO MOV-SEG.
 
-           MOVE EURENT-USUARIO          TO MOV-IMPORTE-ENT.
-           MOVE EURDEC-USUARIO          TO MOV-IMPORTE-DEC.
+           MOVE CENT-IMPOR-USER          TO MOV-IMPORTE-ENT.
 
            MOVE CON                     TO MOV-CONCEPTO.
 
@@ -274,24 +281,18 @@
            WRITE MOVIMIENTO-REG INVALID KEY GO TO PSYS-ERR.
            CLOSE F-MOVIMIENTOS.
 
-           GO TO PANTALLA-INGRESO.
-
 
 
 
        PANT SECTION.
 
-           COMPUTE EURENT-USUARIO = (CENT-ACUMULADOR / 100).
-           MOVE FUNCTION MOD(CENT-ACUMULADOR, 100)
-               TO EURDEC-USUARIO.
+           COMPUTE EURENT-USUARIO = (CENT-IMPOR-USER / 100).
 
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
            DISPLAY "Ingresar efectivo" LINE 8 COLUMN 30.
            DISPLAY "Se han recibido correctamente:" LINE 10 COLUMN 19.
            DISPLAY EURENT-USUARIO LINE 10 COLUMN 50.
-           DISPLAY EURDEC-USUARIO LINE 10 COLUMN 58.
-           DISPLAY "." LINE 10 COLUMN 57.
-           DISPLAY "EUR" LINE 10 COLUMN 61.
+           DISPLAY "EUR" LINE 10 COLUMN 58.
            DISPLAY "El saldo resultante es de:" LINE 11 COLUMN 19.
 
            DISPLAY SALDO-DISPLAY-FINAL.
