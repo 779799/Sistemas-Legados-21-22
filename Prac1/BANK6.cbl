@@ -417,10 +417,10 @@
 
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
            DISPLAY "Ha ocurrido un error interno" LINE 09 COLUMN 25
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Vuelva mas tarde" LINE 11 COLUMN 32
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
 
@@ -434,8 +434,9 @@
        USER-BAD.
            CLOSE TARJETAS.
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
-           DISPLAY "La cuenta introducida es incorrecta" LINE 9 COLUMN 22
-               WITH FOREGROUND-COLOR IS BLACK
+           DISPLAY "La cuenta introducida es incorrecta" 
+               LINE 9 COLUMN 22
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Enter - Salir" LINE 24 COLUMN 33.
            GO TO EXIT-ENTER.

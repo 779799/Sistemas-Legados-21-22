@@ -68,7 +68,7 @@
            88 DOWN-ARROW-PRESSED  VALUE  2004.
 
        77 LAST-MOV-NUM             PIC  9(35).
-       77 PRESSED-KEY              PIC   9(4).
+       77 PRESSED-KEY              PIC   9(1).
 
        LINKAGE SECTION.
        77 TNUM                     PIC  9(16).
@@ -159,10 +159,10 @@
 
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
            DISPLAY "Ha ocurrido un error interno" LINE 9 COLUMN 25
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Vuelva mas tarde" LINE 11 COLUMN 32
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
 

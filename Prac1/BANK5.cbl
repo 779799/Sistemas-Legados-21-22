@@ -82,7 +82,7 @@
        77 CENT-ACUMULADOR          PIC   9(11).
 
        77 CON                      PIC   X(35) VALUE "Ingreso".
-       77 PRESSED-KEY              PIC    9(4).
+       77 PRESSED-KEY              PIC    9(1).
 
        LINKAGE SECTION.
        77 TNUM                     PIC  9(16).
@@ -261,7 +261,7 @@
 
        ESCRITURA.
            ADD 1 TO LAST-MOV-NUM.
-
+           COMPUTE EURENT-USUARIO = (CENT-IMPOR-USER / 100).
            MOVE LAST-MOV-NUM            TO MOV-NUM.
            MOVE TNUM                    TO MOV-TARJETA.
            MOVE ANO                     TO MOV-ANO.
@@ -271,7 +271,7 @@
            MOVE MINUTOS                 TO MOV-MIN.
            MOVE SEGUNDOS                TO MOV-SEG.
 
-           MOVE CENT-IMPOR-USER          TO MOV-IMPORTE-ENT.
+           MOVE EURENT-USUARIO          TO MOV-IMPORTE-ENT.
 
            MOVE CON                     TO MOV-CONCEPTO.
 
@@ -286,7 +286,7 @@
 
        PANT SECTION.
 
-           COMPUTE EURENT-USUARIO = (CENT-IMPOR-USER / 100).
+           
 
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
            DISPLAY "Ingresar efectivo" LINE 8 COLUMN 30.
@@ -309,10 +309,10 @@
 
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
            DISPLAY "Ha ocurrido un error interno" LINE 9 COLUMN 25
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Vuelva mas tarde" LINE 11 COLUMN 32
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
 

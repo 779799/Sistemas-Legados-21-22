@@ -113,7 +113,8 @@
 
        P1.
            DISPLAY "Bienvenido a UnizarBank" LINE 8 COLUMN 28.
-           DISPLAY "Por favor, introduzca la tarjeta para operar" LINE 10 COLUMN 18.
+           DISPLAY "Por favor, introduzca la tarjeta para operar" 
+               LINE 10 COLUMN 18.
 
            DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
 
@@ -225,10 +226,10 @@
 
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
            DISPLAY "Ha ocurrido un error interno" LINE 9 COLUMN 25
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Vuelva mas tarde" LINE 11 COLUMN 32
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
            GO TO PINT-ERR-ENTER.
@@ -242,16 +243,18 @@
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
            DISPLAY "Se ha sobrepasado el numero de intentos" LINE 9
                COLUMN 20
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
-           DISPLAY "Por su seguridad se ha bloqueado la tarjeta" LINE 11 COLUMN 18
-               WITH FOREGROUND-COLOR IS BLACK
+           DISPLAY "Por su seguridad se ha bloqueado la tarjeta" 
+               LINE 11 COLUMN 18
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Acuda a una sucursal" LINE 12 COLUMN 30
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
-
+       
+     
        PINT-ERR-ENTER.
            ACCEPT CHOICE LINE 24 COLUMN 80 ON EXCEPTION
            IF ENTER-PRESSED
@@ -269,19 +272,18 @@
 
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
            DISPLAY "El codigo PIN es incorrecto" LINE 9 COLUMN 26
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Le quedan " LINE 11 COLUMN 30
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY IINTENTOS LINE 11 COLUMN 40
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
-           DISPLAY " intentos" LINE 11 COLUMN 42
+           DISPLAY " intentos" LINE 11 COLUMN 41
 
-               WITH FOREGROUND-COLOR IS BLACK
+               WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
-
            DISPLAY "Enter - Aceptar" LINE 24 COLUMN 1.
            DISPLAY "ESC - Cancelar" LINE 24 COLUMN 65.
 
