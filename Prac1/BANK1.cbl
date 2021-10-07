@@ -119,7 +119,7 @@
            DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
 
        P1-ENTER.
-           ACCEPT CHOICE LINE 24 COLUMN 80 ON EXCEPTION
+           ACCEPT CHOICE LINE 24 COLUMN 80 
            IF ENTER-PRESSED
                GO TO P2
            ELSE
@@ -256,7 +256,7 @@
        
      
        PINT-ERR-ENTER.
-           ACCEPT CHOICE LINE 24 COLUMN 80 ON EXCEPTION
+           ACCEPT CHOICE LINE 24 COLUMN 80 
            IF ENTER-PRESSED
                GO TO IMPRIMIR-CABECERA
            ELSE
@@ -288,7 +288,7 @@
            DISPLAY "ESC - Cancelar" LINE 24 COLUMN 65.
 
        PPIN-ERR-ENTER.
-           ACCEPT CHOICE LINE 24 COLUMN 80 ON EXCEPTION
+           ACCEPT CHOICE LINE 24 COLUMN 80 
            IF ENTER-PRESSED
                GO TO P2
            ELSE
