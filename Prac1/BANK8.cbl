@@ -68,11 +68,11 @@
        01 BLANK-SCREEN.
            05 FILLER LINE 1 BLANK SCREEN BACKGROUND-COLOR BLACK.
        01 DATA-ACCEPT.
-           05  BLANK ZERO SECURE LINE 08 COL 50
+           05  BLANK ZERO SECURE LINE 11 COL 50
                PIC 9(4) USING TACT.
-           05  BLANK ZERO SECURE LINE 09 COL 50
+           05  BLANK ZERO SECURE LINE 12 COL 50
                PIC 9(4) USING PIN-NUEVO.
-           05  BLANK ZERO SECURE LINE 10 COL 50
+           05  BLANK ZERO SECURE LINE 13 COL 50
                PIC 9(4) USING PIN-NUEVO-REP.
 
        
@@ -98,10 +98,13 @@
            DISPLAY MINUTOS LINE 4 COLUMN 47.
 
        P1.
-           DISPLAY "ESC - Salir" LINE 24 COLUMN 33.
-           DISPLAY "Introduzca clave actual:" LINE 8 COLUMN 15.
-           DISPLAY "Introduzca nueva clave:"  LINE 9 COLUMN 15.
-           DISPLAY "Repita nueva clave:" LINE 10 COLUMN 15.
+       
+           DISPLAY "Enter - Aceptar" LINE 24 COLUMN 1.
+           DISPLAY "ESC - Cancelar" LINE 24 COLUMN 66.
+           DISPLAY "Cambiar clave" LINE 8 COLUMN 30.
+           DISPLAY "Introduzca clave actual:" LINE 11 COLUMN 15.
+           DISPLAY "Introduzca clave actual:" LINE 12 COLUMN 15.
+           DISPLAY "Repita nueva clave:" LINE 13 COLUMN 15.
        
     
        ENTER-VERIFICACION.
@@ -130,8 +133,13 @@
            MOVE PIN-NUEVO TO TPIN-C.
            REWRITE TAJETAREG INVALID KEY GO TO PSYS-ERR.
            CLOSE TARJETAS.   
-
-            GO TO EXIT-ENTER.
+           
+       PANTALLA-CLAVE-ACTUALIZADO.    
+           PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
+           DISPLAY "Enter - Salir" LINE 24 COLUMN 33.
+           DISPLAY "Cambiar clave" LINE 8 COLUMN 30.
+           DISPLAY "La clave se ha actualizado" LINE 11 COL 20.
+           GO TO EXIT-ENTER.
        
        USER-BAD.
            CLOSE TARJETAS.
