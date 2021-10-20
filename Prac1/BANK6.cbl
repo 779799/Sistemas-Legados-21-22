@@ -24,8 +24,7 @@
            ORGANIZATION IS INDEXED
            ACCESS MODE IS DYNAMIC
            RECORD KEY IS TRF-NUM
-           FILE STATUS IS FSM.
-
+           FILE STATUS IS FSTRF.
 
        DATA DIVISION.
        FILE SECTION.
@@ -52,6 +51,7 @@
            02 MOV-CONCEPTO         PIC  X(35).
            02 MOV-SALDOPOS-ENT     PIC  S9(9).
            02 MOV-SALDOPOS-DEC     PIC   9(2).
+
        FD F-TRANSFERENCIAS
            LABEL RECORD STANDARD
            VALUE OF FILE-ID IS "transferencias.ubd".
@@ -64,12 +64,16 @@
            02 TRF-HOR              PIC   9(2).
            02 TRF-MIN              PIC   9(2).
            02 TRF-SEG              PIC   9(2).
+           02 TRF-CONCEPTO         PIC  X(18).
            02 TRF-IMPORTE-ENT      PIC  S9(7).
            02 TRF-IMPORTE-DEC      PIC   9(2).
+           
+
+
        WORKING-STORAGE SECTION.
        77 FST                      PIC   X(2).
        77 FSM                      PIC   X(2).
-
+       77 FSTRF                    PIC   X(2). 
        78 BLACK                  VALUE      0.
        78 BLUE                   VALUE      1.
        78 GREEN                  VALUE      2.
@@ -104,11 +108,11 @@
        77 LAST-MOV-NUM             PIC  9(35).
        77 LAST-USER-ORD-MOV-NUM    PIC  9(35).
        77 LAST-USER-DST-MOV-NUM    PIC  9(35).
-       
+
        77 LAST-TRF-NUM             PIC  9(35).
        77 LAST-USER-ORD-TRF-NUM    PIC  9(35).
        77 LAST-USER-DST-TRF-NUM    PIC  9(35).
-
+       
        77 EURENT-USUARIO           PIC  S9(7).
        77 EURDEC-USUARIO           PIC   9(2).
        77 CUENTA-DESTINO           PIC  9(16).
@@ -117,16 +121,18 @@
        77 CENT-SALDO-ORD-USER      PIC  S9(9).
        77 CENT-SALDO-DST-USER      PIC  S9(9).
        77 CENT-IMPOR-USER          PIC  S9(9).
-       
+
        77 PROG-DIA                 PIC  S9(2).
        77 PROG-MES                 PIC  S9(2).
        77 PROG-ANO                 PIC  S9(4).
        77 PROG-HOR                 PIC  S9(2).
        77 PROG-MIN                 PIC  S9(2).
        77 PROG-SEG                 PIC  S9(2).
-       77 PROG-REP                 PIC   X(1).
-
-
+       77 PROG-REP                 PIC   9(3).
+       
+       77 PROG-COUNT               PIC   9(3).
+       77 TEMP-MES                 PIC   9(3).
+       
        77 MSJ-ORD                  PIC  X(35) VALUE "Transferimos".
        77 MSJ-DST                  PIC  X(35) VALUE "Nos transfieren".
 
@@ -161,10 +167,9 @@
                LINE 14 COL 57 PIC 9(2) USING PROG-MIN. 
            05 FILLER BLANK WHEN ZERO AUTO UNDERLINE
                LINE 14 COL 60 PIC 9(2) USING PROG-SEG.      
-           05 FILLER AUTO UNDERLINE
-               LINE 16 COL 54 PIC X(1) USING PROG-REP. 
-           
-
+           05 FILLER BLANK WHEN ZERO UNDERLINE
+               LINE 17 COL 60 PIC 9(3) USING PROG-REP. 
+               
        01 SALDO-DISPLAY.
            05 FILLER SIGN IS LEADING SEPARATE
                LINE 10 COL 33 PIC -9(7) FROM MOV-SALDOPOS-ENT.
@@ -184,7 +189,10 @@
            INITIALIZE LAST-MOV-NUM.
            INITIALIZE LAST-USER-ORD-MOV-NUM.
            INITIALIZE LAST-USER-DST-MOV-NUM.
-
+           INITIALIZE LAST-TRF-NUM.
+           INITIALIZE LAST-USER-ORD-TRF-NUM.
+           INITIALIZE LAST-USER-DST-TRF-NUM.
+           
        IMPRIMIR-CABECERA.
            DISPLAY BLANK-SCREEN.
            DISPLAY "Cajero Automatico UnizarBank" LINE 2 COLUMN 26
@@ -221,7 +229,7 @@
 
        ORDENACION-TRF.
            CLOSE F-MOVIMIENTOS.
-
+           PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
            DISPLAY "Ordenar Transferencia" LINE 8 COLUMN 30.
            DISPLAY "Saldo Actual:" LINE 10 COLUMN 19.
 
@@ -301,17 +309,18 @@
            DISPLAY NOMBRE-DESTINO LINE 12 COLUMN 48.
 
            DISPLAY "Enter - Confirmar" LINE 24 COLUMN 2.
-           DISPLAY "PGUP - Programar transferencia" LINE 24 COLUMN 26
-           WITH FOREGROUND-COLOR IS BLACK
-                    BACKGROUND-COLOR IS YELLOW.
+           DISPLAY "Av. pag - Programar transferencia" LINE 24 COLUMN 26
+           WITH FOREGROUND-COLOR IS WHITE.
            DISPLAY "ESC - Cancelar" LINE 24 COLUMN 66.
 
        ENTER-VERIFICACION.
            ACCEPT PRESSED-KEY LINE 24 COLUMN 80 ON EXCEPTION
            IF ESC-PRESSED THEN
-               EXIT PROGRAM
-           ELSE IF PGUP-PRESSED THEN
-               GO TO PROGRAMAR-TRF
+               GO TO ORDENACION-TRF
+           ELSE IF PGDN-PRESSED THEN
+               PERFORM VERIFICACION-CTA-CORRECTA
+               CLOSE F-MOVIMIENTOS
+               GO TO TRANSFERENCIAS-OPEN
            ELSE
                GO TO ENTER-VERIFICACION
            END-IF.
@@ -400,10 +409,173 @@
            WRITE MOVIMIENTO-REG INVALID KEY GO TO PSYS-ERR.
 
            CLOSE F-MOVIMIENTOS.
+           GO TO P-EXITO.
 
+       TRANSFERENCIAS-OPEN.
+           CLOSE F-TRANSFERENCIAS
+           OPEN I-O F-TRANSFERENCIAS.
+           IF FSTRF <> 00 AND 05
+               GO TO PSYS-ERR.
+
+       LECTURA-TRANSFERENCIAS.
+           READ F-TRANSFERENCIAS NEXT RECORD AT END GO TO PROGRAMAR-TRF.
+           IF TRF-TARJETA = TNUM THEN
+               IF LAST-USER-ORD-TRF-NUM < TRF-NUM THEN
+                   MOVE TRF-NUM TO LAST-USER-ORD-TRF-NUM
+               END-IF
+           END-IF.
+           IF LAST-TRF-NUM < TRF-NUM THEN
+               MOVE TRF-NUM TO LAST-TRF-NUM
+           END-IF.
+           GO TO LECTURA-TRANSFERENCIAS.
+           
+       PROGRAMAR-TRF.    
+           CLOSE F-TRANSFERENCIAS.
+           PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
+           DISPLAY "Programar transferencia" LINE 8 COLUMN 30.
+           
+           DISPLAY "Indique la fecha deseada " LINE 12 COLUMN 19.
+           DISPLAY "/" LINE 12 COLUMN 56.
+           DISPLAY "/" LINE 12 COLUMN 59.
+           DISPLAY "Indique la hora deseada " LINE 14 COLUMN 19.
+           DISPLAY ":" LINE 14 COLUMN 56.
+           DISPLAY ":" LINE 14 COLUMN 59.
+           DISPLAY "Si quiere programar transferencias mensuales," 
+               LINE 16 COLUMN 19.
+           DISPLAY "indique el numero de pagos a realizar:"
+               LINE 17 COLUMN 21.     
+           DISPLAY "Enter - Aceptar" LINE 24 COLUMN 1.
+           DISPLAY "ESC - Cancelar" LINE 24 COLUMN 65.
+           
+           MOVE LAST-USER-ORD-TRF-NUM TO TRF-NUM.
+           ACCEPT FILTRO-PROG ON EXCEPTION
+           IF ESC-PRESSED THEN
+               GO TO REALIZAR-TRF-VERIFICACION
+           ELSE 
+               GO TO PROGRAMAR-TRF
+           END-IF.  
+           
+       REALIZAR-TRF-PROG-VERIFICACION.
+       PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
+           DISPLAY "Ordenar Transferencia" LINE 08 COLUMN 30.
+           DISPLAY "Ha programado transferir " LINE 11 COLUMN 19.
+           DISPLAY EURENT-USUARIO LINE 11 COLUMN 44.
+           DISPLAY "." LINE 11 COLUMN 51.
+           DISPLAY EURDEC-USUARIO LINE 11 COLUMN 52.
+           DISPLAY "EUR de su cuenta" LINE 11 COLUMN 55.
+           DISPLAY "a la cuenta cuyo titular es" LINE 12 COLUMN 19.
+           DISPLAY NOMBRE-DESTINO LINE 12 COLUMN 47.
+           IF PROG-REP < 2 THEN
+               PERFORM MOSTRAR-PUNTUAL
+           ELSE 
+               PERFORM MOSTRAR-MENSUAL
+           END-IF.
+           DISPLAY "Enter - Confirmar" LINE 24 COLUMN 2.
+           DISPLAY "ESC - Cancelar" LINE 24 COLUMN 66.
+           GO TO ENTER-VERIFICACION-PROG.
+       MOSTRAR-PUNTUAL.
+           DISPLAY "el dia " LINE 13 COLUMN 19.
+           DISPLAY PROG-DIA LINE 13 COLUMN 26.
+           DISPLAY "/" LINE 13 COLUMN 28.
+           DISPLAY PROG-MES LINE 13 COLUMN 29.
+           DISPLAY "/" LINE 13 COLUMN 31.
+           DISPLAY PROG-ANO LINE 13 COLUMN 32.
+           DISPLAY " a las " LINE 13 COLUMN 36.
+           DISPLAY PROG-HOR LINE 13 COLUMN 43.
+           DISPLAY ":" LINE 13 COLUMN 45.
+           DISPLAY PROG-MIN LINE 13 COLUMN 46.
+           DISPLAY ":" LINE 13 COLUMN 48.
+           DISPLAY PROG-SEG LINE 13 COLUMN 49.
+           
+       MOSTRAR-MENSUAL.
+           DISPLAY "los dias    de cada mes " LINE 13 COLUMN 19.
+           DISPLAY PROG-DIA LINE 13 COLUMN 28.
+           DISPLAY "durante     meses." LINE 13 COLUMN 43.
+           DISPLAY PROG-REP LINE 13 COLUMN 51.
+           
+       ENTER-VERIFICACION-PROG.
+           ACCEPT PRESSED-KEY LINE 24 COLUMN 80 ON EXCEPTION
+           IF ESC-PRESSED THEN
+               GO TO PROGRAMAR-TRF
+           ELSE
+               GO TO ENTER-VERIFICACION-PROG
+           END-IF.    
+           PERFORM TRANSFERENCIAS-OPEN THRU TRANSFERENCIAS-OPEN.
+           MOVE 0 TO TRF-NUM.
+           MOVE 0 TO LAST-USER-DST-TRF-NUM.
+           
+       LECTURA-PROG-SALDO-DST.           
+           READ F-TRANSFERENCIAS NEXT RECORD 
+               AT END GO TO PREPARAR-PROGRAMA-TRF.
+           IF TRF-TARJETA = CUENTA-DESTINO THEN
+               IF LAST-USER-DST-TRF-NUM < TRF-NUM THEN
+                   MOVE TRF-NUM TO LAST-USER-DST-TRF-NUM
+               END-IF
+           END-IF.
+           GO TO LECTURA-PROG-SALDO-DST.   
+           
+       PREPARAR-PROGRAMA-TRF.
+           MOVE LAST-USER-DST-TRF-NUM TO TRF-NUM.
+           PERFORM TRANSFERENCIAS-OPEN THRU TRANSFERENCIAS-OPEN.
+           READ F-TRANSFERENCIAS.
+           
+           IF PROG-REP < 1
+               MOVE 1 TO PROG-REP
+           END-IF.
+           
+           PERFORM ESCRIBIR-TRANSFER UNTIL PROG-COUNT = PROG-REP.
+           CLOSE F-TRANSFERENCIAS.
+           GO TO P-EXITO.
+           
+       ESCRIBIR-TRANSFER.
+           ADD 1 TO LAST-TRF-NUM.
+           
+           MOVE LAST-TRF-NUM        TO TRF-NUM.
+           MOVE TNUM                TO TRF-TARJETA.
+           MOVE PROG-ANO            TO TRF-ANO.
+           MOVE PROG-MES            TO TRF-MES.
+           MOVE PROG-DIA            TO TRF-DIA.
+           MOVE PROG-HOR            TO TRF-HOR.
+           MOVE PROG-MIN            TO TRF-MIN.
+           MOVE PROG-SEG            TO TRF-SEG.
+           MOVE MSJ-ORD             TO TRF-CONCEPTO.
+           MULTIPLY -1 BY EURENT-USUARIO.
+           MOVE EURENT-USUARIO      TO TRF-IMPORTE-ENT.
+           MULTIPLY -1 BY EURENT-USUARIO.
+           MOVE EURDEC-USUARIO      TO TRF-IMPORTE-DEC.
+
+           WRITE TRANSFERENCIA-REG INVALID KEY GO TO PSYS-ERR.
+
+           ADD 1 TO LAST-TRF-NUM.
+
+           MOVE LAST-TRF-NUM        TO TRF-NUM.
+           MOVE CUENTA-DESTINO      TO TRF-TARJETA.
+           MOVE PROG-ANO            TO TRF-ANO.
+           MOVE PROG-MES            TO TRF-MES.
+           MOVE PROG-DIA            TO TRF-DIA.
+           MOVE PROG-HOR            TO TRF-HOR.
+           MOVE PROG-MIN            TO TRF-MIN.
+           MOVE PROG-SEG            TO TRF-SEG.
+           
+           MOVE MSJ-DST             TO TRF-CONCEPTO.
+           MOVE EURENT-USUARIO      TO TRF-IMPORTE-ENT.
+           MOVE EURDEC-USUARIO      TO TRF-IMPORTE-DEC.
+
+           WRITE TRANSFERENCIA-REG INVALID KEY GO TO PSYS-ERR.
+           ADD 1 TO PROG-COUNT.
+           IF PROG-REP > 1 THEN
+               PERFORM SUMAR-MES
+           END-IF.
+                          
+       SUMAR-MES.
+           ADD 1 TO PROG-MES
+           IF PROG-MES > 12 THEN
+               ADD 1 TO PROG-ANO
+               MOVE FUNCTION MOD(PROG-MES, 12) TO PROG-MES
+           END-IF.                         
+           
        P-EXITO.
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
-
            DISPLAY "Ordenar transferencia" LINE 8 COLUMN 30.
            DISPLAY "Transferencia realizada correctamente!" LINE 11
                COLUMN 19.
@@ -414,7 +586,6 @@
        PSYS-ERR.
            CLOSE TARJETAS.
            CLOSE F-MOVIMIENTOS.
-
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
            DISPLAY "Ha ocurrido un error interno" LINE 09 COLUMN 25
                WITH FOREGROUND-COLOR IS WHITE
@@ -423,7 +594,6 @@
                WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
-
        EXIT-ENTER.
            ACCEPT PRESSED-KEY LINE 24 COLUMN 80
            IF ENTER-PRESSED
@@ -439,97 +609,4 @@
                WITH FOREGROUND-COLOR IS WHITE
                     BACKGROUND-COLOR IS RED.
            DISPLAY "Enter - Salir" LINE 24 COLUMN 33.
-           GO TO EXIT-ENTER.
-
-       PROGRAMAR-TRF.    
-           PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
-           DISPLAY "Programar transferencia" LINE 8 COLUMN 30.
-           
-           DISPLAY "Indica la fecha deseada " LINE 12 COLUMN 19.
-           DISPLAY "/" LINE 12 COLUMN 56.
-           DISPLAY "/" LINE 12 COLUMN 59.
-           DISPLAY "Indica la hora deseada " LINE 14 COLUMN 19.
-           DISPLAY ":" LINE 14 COLUMN 56.
-           DISPLAY ":" LINE 14 COLUMN 59.
-           DISPLAY "Indica mensualidad (S/N)" LINE 16 COLUMN 19.
-           DISPLAY "Enter - Aceptar" LINE 24 COLUMN 1.
-           DISPLAY "ESC - Cancelar" LINE 24 COLUMN 65.
-           
-           ACCEPT FILTRO-PROG ON EXCEPTION
-           IF ESC-PRESSED THEN
-               EXIT PROGRAM
-           ELSE
-               GO TO PROGRAMAR-TRF
-           END-IF.
-          
-           
-       TRANSFERENCIAS-OPEN.
-           OPEN I-O F-TRANSFERENCIAS.
-           IF FSM <> 00  AND 05
-               GO TO PSYS-ERR.
-
-
-       LECTURA-TRANSFERENCIAS.
-           READ F-TRANSFERENCIAS NEXT RECORD AT END GO TO ORDENACION-TRF.
-           IF TRF-TARJETA = TNUM THEN
-               IF LAST-USER-ORD-MOV-NUM < MOV-NUM THEN
-                   MOVE TRF-NUM TO LAST-USER-ORD-MOV-NUM
-               END-IF
-           END-IF.
-           IF LAST-TRF-NUM < TRF-NUM THEN
-               MOVE TRF-NUM TO LAST-MOV-NUM
-           END-IF.
-           GO TO LECTURA-TRANSFERENCIAS.
-           
-       GUARDAR-TRANSFER.
-           CLOSE F-MOVIMIENTOS.
-           MOVE LAST-USER-DST-TRF-NUM TO TRF-NUM.
-           PERFORM TRANSFERENCIAS-OPEN THRU TRANSFERENCIAS-OPEN.
-           READ F-TRANSFERENCIAS.
-
-
-           ADD 1 TO LAST-TRF-NUM.
-
-           MOVE LAST-TRF-NUM   TO TRF-NUM.
-           MOVE TNUM           TO TRF-TARJETA.
-           MOVE ANO            TO TRF-ANO.
-           MOVE MES            TO TRF-MES.
-           MOVE DIA            TO TRF-DIA.
-           MOVE HORAS          TO TRF-HOR.
-           MOVE MINUTOS        TO TRF-MIN.
-           MOVE SEGUNDOS       TO TRF-SEG.
-
-           MULTIPLY -1 BY EURENT-USUARIO.
-           MOVE EURENT-USUARIO TO TRF-IMPORTE-ENT.
-           MULTIPLY -1 BY EURENT-USUARIO.
-           MOVE EURDEC-USUARIO TO TRF-IMPORTE-DEC.
-
-           WRITE TRANSFERENCIA-REG INVALID KEY GO TO PSYS-ERR.
-
-           ADD 1 TO LAST-MOV-NUM.
-
-           MOVE LAST-TRF-NUM   TO TRF-NUM.
-           MOVE CUENTA-DESTINO TO TRF-TARJETA.
-           MOVE ANO            TO TRF-ANO.
-           MOVE MES            TO TRF-MES.
-           MOVE DIA            TO TRF-DIA.
-           MOVE HORAS          TO TRF-HOR.
-           MOVE MINUTOS        TO TRF-MIN.
-           MOVE SEGUNDOS       TO TRF-SEG.
-
-           MOVE EURENT-USUARIO TO TRF-IMPORTE-ENT.
-           MOVE EURDEC-USUARIO TO TRF-IMPORTE-DEC.
-
-           WRITE TRANSFERENCIA-REG INVALID KEY GO TO PSYS-ERR.
-
-           CLOSE F-TRANSFERENCIAS.    
-           
-       P-EXITO.
-           PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
-
-           DISPLAY "Programar transferencia" LINE 8 COLUMN 30.
-           DISPLAY "Transferencia programada correctamente!" LINE 11
-               COLUMN 19.
-           DISPLAY "Enter - Aceptar" LINE 24 COLUMN 33.
-
            GO TO EXIT-ENTER.
