@@ -219,9 +219,9 @@
                VALUE "(presione [ENTER] para continuar".
            05 FILLER LINE 22 COL 43
                VALUE "con el proceso de compra)".
-           05 FILLER BLANK WHEN ZERO UNDERLINE AUTO
+           05 FILLER BLANK WHEN ZERO FOREGROUND-COLOR CYAN AUTO
                LINE 21 COL 28 PIC 99 USING USER-NUM-ENTRADAS.
-           05 FILLER BLANK WHEN ZERO UNDERLINE
+           05 FILLER BLANK WHEN ZERO FOREGROUND-COLOR CYAN
                LINE 21 COL 56 PIC 9(4) USING USER-NUM-ESPECT.
 
        01 FORM-ERR.
@@ -245,7 +245,7 @@
             INITIALIZE USER-NUM-ESPECT.
            DISPLAY BLANK-SCREEN.
            DISPLAY "Cajero Automatico UnizarBank" LINE 2 COLUMN 26
-               WITH FOREGROUND-COLOR IS 1.
+               WITH FOREGROUND-COLOR IS CYAN.
 
            MOVE FUNCTION CURRENT-DATE TO CAMPOS-FECHA.
 
@@ -390,7 +390,7 @@
        SALDO-SUFICIENTE.
            DISPLAY BLANK-SCREEN.
            DISPLAY "Cajero Automatico UnizarBank" LINE 2 COLUMN 26
-               WITH FOREGROUND-COLOR IS 1.
+               WITH FOREGROUND-COLOR IS CYAN.
 
            MOVE FUNCTION CURRENT-DATE TO CAMPOS-FECHA.
 
