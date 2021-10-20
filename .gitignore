@@ -1,5 +1,3 @@
 
-*.dll
-*.exe
-*.ubd
+BANK*.dll
 *.ubd
