@@ -101,7 +101,7 @@
        
            DISPLAY "Enter - Aceptar" LINE 24 COLUMN 1.
            DISPLAY "ESC - Cancelar" LINE 24 COLUMN 66.
-           DISPLAY "Cambiar clave" LINE 8 COLUMN 30.
+           DISPLAY "Cambio de clave personal" LINE 8 COLUMN 15.
            DISPLAY "Introduzca clave actual:" LINE 11 COLUMN 15.
            DISPLAY "Introduzca clave actual:" LINE 12 COLUMN 15.
            DISPLAY "Repita nueva clave:" LINE 13 COLUMN 15.
@@ -137,8 +137,9 @@
        PANTALLA-CLAVE-ACTUALIZADO.    
            PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA.
            DISPLAY "Enter - Salir" LINE 24 COLUMN 33.
-           DISPLAY "Cambiar clave" LINE 8 COLUMN 30.
-           DISPLAY "La clave se ha actualizado" LINE 11 COL 20.
+           DISPLAY "Cambio de clave personal" LINE 8 COLUMN 15.
+           DISPLAY "La clave se ha cambiado correctamente" 
+               LINE 11 COL 15.
            GO TO EXIT-ENTER.
        
        USER-BAD.
