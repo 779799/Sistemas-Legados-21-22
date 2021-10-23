@@ -206,9 +206,9 @@
            INITIALIZE MES2-USUARIO.
            INITIALIZE ANO2-USUARIO.
 
-           DISPLAY "Se  mostraran las ultimas transferencias," LINE 8
+           DISPLAY "Se mostraran las ultimas transferencias," LINE 8
                COLUMN 8.
-           DISPLAY "de mas a menos recientes." LINE 8 COLUMN 47.
+           DISPLAY "de mas a menos recientes." LINE 8 COLUMN 49.
 
            DISPLAY "Alternativamente, indique un intervalo" LINE 10
                COLUMN 8.
