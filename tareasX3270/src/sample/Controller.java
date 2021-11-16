@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
 import javax.swing.*;
@@ -13,10 +14,15 @@ import javax.xml.soap.Text;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
+
+import sample.Task;
+import sample.TaskManager;
 
 public class Controller {
 
     ObservableList<String> tiposList = FXCollections.observableArrayList("General","Específico");
+    TaskManager manager = new TaskManager();
 
     @FXML
     private ChoiceBox tipoFiltro;
@@ -31,12 +37,34 @@ public class Controller {
     private TextField fechaCrear;
     @FXML
     private TextField descripcionCrear;
+    @FXML
+    private ListView<Task> listaTareas = new ListView<Task>();
 
     @FXML
     private void initialize(){
         tipoFiltro.setItems(tiposList);
         tipoCrear.setItems(tiposList);
+        manager.start();
     }
+
+    @FXML
+    private void actualizarListaEspecifica(){
+        List<Task> list = manager.viewSpecificTasks();
+        listaTareas.getItems().clear();
+        for (Task t: list){
+            listaTareas.getItems().add(t);
+        }
+    }
+
+    @FXML
+    private void actualizarListaGeneral(){
+        List<Task> list = manager.viewSpecificTasks();
+        listaTareas.getItems().clear();
+        for (Task t: list){
+            listaTareas.getItems().add(t);
+        }
+    }
+
     @FXML
     public void btSalir(ActionEvent actionEvent){
         System.out.println("Pulsado botón salir");
@@ -98,8 +126,7 @@ public class Controller {
                 return;
             }else{
                 // Introduce tarea general
-
-
+                manager.assignGeneralTask(descripcion,fecha);
             }
 
 
@@ -116,11 +143,9 @@ public class Controller {
                 return;
             }else{
                 // Introduce tarea específica
-
+                manager.assignSpecificTask(nombre,descripcion,fecha);
 
             }
-
-
 
         }
 
