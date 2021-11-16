@@ -1,1 +1,5 @@
 *.ubd
+.idea/*
+tareasX3270/.idea/*
+
+*.class
