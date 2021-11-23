@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane alignment="center" hgap="10" prefHeight="600.0" prefWidth="600.0" vgap="10" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+    <columnConstraints>
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+    </rowConstraints>
+    <children>
+        <Pane prefHeight="700.0" prefWidth="600.0">
+            <children>
+                <ListView fx:id="taskList" layoutX="51.0" layoutY="83.0" prefHeight="355.0" prefWidth="499.0" />
+                <Button fx:id="exitButton" layoutX="450.0" layoutY="41.0" mnemonicParsing="false" onAction="#exitOnAction" prefWidth="100.0" text="Salir" />
+                <Label layoutX="47.0" layoutY="14.0" text="Gestor de tareas">
+                    <font>
+                        <Font size="18.0" />
+                    </font></Label>
+                <ChoiceBox fx:id="filterBox" layoutX="315.0" layoutY="41.0" onAction="#filterOnAction" prefHeight="25.0" prefWidth="110.0" />
+                <TextField fx:id="nameField" layoutX="315.0" layoutY="472.0" prefHeight="25.0" prefWidth="130.0" />
+                <TextField fx:id="dateField" layoutX="170.0" layoutY="472.0" prefHeight="25.0" prefWidth="130.0" />
+                <TextField fx:id="descriptionField" layoutX="51.0" layoutY="529.0" prefHeight="25.0" prefWidth="394.0" />
+                <Button fx:id="createButton" layoutX="473.0" layoutY="496.0" mnemonicParsing="false" onAction="#createOnAction" text="Crear Tarea" />
+                <ChoiceBox fx:id="createBox" layoutX="51.0" layoutY="472.0" onAction="#createTypeOnAction" prefHeight="25.0" prefWidth="100.0" />
+                <Label layoutX="51.0" layoutY="455.0" text="Tipo" />
+                <Label fx:id="errorLabel" layoutX="52.0" layoutY="563.0" text="error" textFill="RED">
+               <font>
+                  <Font size="11.0" />
+               </font></Label>
+                <Label layoutX="170.0" layoutY="455.0" text="Fecha(ddmm)" />
+                <Label fx:id="nameLabel" layoutX="315.0" layoutY="455.0" text="Nombre" />
+                <Label layoutX="51.0" layoutY="508.0" text="Descripción" />
+                <Label layoutX="222.0" layoutY="44.0" text="Filtrar por tipo">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            </children></Pane>
+    </children>
+</GridPane>
