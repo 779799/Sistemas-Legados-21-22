@@ -15,7 +15,7 @@ import java.util.List;
 public class Controller {
     private final String GENERAL = "General";
     private final String SPECIFIC = "Específico";
-
+    private final int MAX_TEXT = 13;
     ObservableList<String> optionList = FXCollections.observableArrayList(GENERAL,SPECIFIC);
     TaskManager manager = new TaskManager();
 
@@ -112,6 +112,10 @@ public class Controller {
             alert("Indique una descripción");
             return;
         }
+        if(description.length()>=MAX_TEXT){
+            alert("Indique una descripción de hasta "+MAX_TEXT+" caracteres");
+            return;
+        }
         if (type.equals(GENERAL)){
             manager.assignGeneralTask(description,date);
         }else if (type.equals(SPECIFIC)){
@@ -119,6 +123,10 @@ public class Controller {
             name = name.replaceAll(" ", "_");
             if(name.isEmpty()){
                 alert("Indique un nombre");
+                return;
+            }
+            if(name.length()>=MAX_TEXT){
+                alert("Indique un nombre de hasta "+MAX_TEXT+" caracteres");
                 return;
             }
             manager.assignSpecificTask(name,description,date);
