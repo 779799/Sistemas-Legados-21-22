@@ -24,7 +24,7 @@
                 <TextField fx:id="nameField" layoutX="315.0" layoutY="472.0" prefHeight="25.0" prefWidth="130.0" />
                 <TextField fx:id="dateField" layoutX="170.0" layoutY="472.0" prefHeight="25.0" prefWidth="130.0" />
                 <TextField fx:id="descriptionField" layoutX="51.0" layoutY="529.0" prefHeight="25.0" prefWidth="394.0" />
-                <Button fx:id="createButton" layoutX="473.0" layoutY="496.0" mnemonicParsing="false" onAction="#createOnAction" text="Crear Tarea" />
+                <Button fx:id="createButton" layoutX="461.0" layoutY="496.0" mnemonicParsing="false" onAction="#createOnAction" text="Asignar Tarea" />
                 <ChoiceBox fx:id="createBox" layoutX="51.0" layoutY="472.0" onAction="#createTypeOnAction" prefHeight="25.0" prefWidth="100.0" />
                 <Label layoutX="51.0" layoutY="455.0" text="Tipo" />
                 <Label fx:id="errorLabel" layoutX="52.0" layoutY="563.0" text="error" textFill="RED">

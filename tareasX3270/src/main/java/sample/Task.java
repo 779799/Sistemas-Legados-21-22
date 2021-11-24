@@ -13,19 +13,6 @@ public class Task {
         this.date=date;
     }
 
-    public String getNumber(){
-        return this.number;
-    }
-    public String getName(){
-        return this.name ;
-    }
-    public String getDescription(){
-        return this.description ;
-    }
-    public String getDate(){
-        return this.date;
-    }
-
     @Override
     public String toString() {
         return "Task " + number + ": " + date + " " + name + " " + description;
