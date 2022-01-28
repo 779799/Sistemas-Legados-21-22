@@ -1,1 +1,0 @@
-gwbasic.exe database
