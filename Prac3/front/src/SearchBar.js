@@ -15,21 +15,21 @@ const SearchBar = () => {
     }, []);
 
     async function getNum() {
-        await axios.get('http://192.168.1.140:8080/numRegister')
+        await axios.get('http://localhost:8080/numRegister')
             .then(response => {
                 setNumReg(response.data);
             });
     }
 
     async function searchByName (name) {
-        await axios.get('http://192.168.1.140:8080/searchByName/' + name)
+        await axios.get('http://localhost:8080/searchByName/' + name)
             .then(response => {
                 setPrograms(response.data);
             });
     }
 
     async function searchByTape(tape) {
-        await axios.get('http://192.168.1.140:8080/searchByTape/' + tape)
+        await axios.get('http://localhost:8080/searchByTape/' + tape)
             .then(response => {
                 setPrograms(response.data);
             });
