@@ -1,28 +1,16 @@
 .App {
-  text-align: center;
+    text-align: center;
+    background-color: darkslateblue;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    padding-top:50px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
 
 .App-link {
   color: #61dafb;
@@ -35,4 +23,93 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 80vw;
+    height: 80vh;
+}
+
+.listContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 4vh;
+    overflow: auto;
+    width: 80vw;
+    height: 80vh;
+}
+.searchContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+
+.searchbar {
+    height: 6vh;
+    width: 40vw;
+    border-style: solid;
+    border-color: cornflowerblue;
+    border-width: 2px;
+    border-radius: 1vh;
+    font-size: 3.8vh;
+}
+
+.searchButton {
+    height: 6vh;
+    width: 10vw;
+    border-radius: 1vh;
+    font-size: 3.8vh;
+    background-color: lightskyblue;
+    color: midnightblue;
+    font-weight: bold;
+}
+
+.select {
+    height: 6vh;
+    width: 12vw;
+    border-radius: 1vh;
+    text-align: center;
+    font-size: 3.8vh;
+}
+
+.list {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.list td {
+    border-style: solid;
+    overflow: hidden;
+    padding: 1vh 2vw;
+    background-color:lightskyblue;
+    border-color:white;
+    color:midnightblue;
+    font-size:4vh;
+}
+
+    .list th {
+        border-style: solid;
+        font-weight: bold;
+        padding: 1vh 2vw;
+        word-break: normal;
+        background-color: cornflowerblue;
+        border-color: white;
+        color: black;
+        vertical-align: central;
+        text-align: center;
+        font-size: 5vh;
+    }
+
+.list .header {
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    border-width: medium;
+    border-color: black;
+    text-align: center;
 }
